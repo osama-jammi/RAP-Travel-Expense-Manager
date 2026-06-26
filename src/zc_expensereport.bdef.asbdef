@@ -1,0 +1,30 @@
+projection;
+strict ( 2 );
+use draft;
+
+define behavior for ZC_ExpenseReport alias Report
+{
+  use create;
+  use update;
+  use delete;
+
+  use action Submit;
+  use action Approve;
+  use action Reject;
+
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Resume;
+  use action Prepare;
+
+  use association _Items { create; with draft; }
+}
+
+define behavior for ZC_ExpenseItem alias Item
+{
+  use update;
+  use delete;
+
+  use association _Report { with draft; }
+}
