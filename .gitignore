@@ -1,0 +1,18 @@
+# abapGit / ABAP
+*.bak
+*.tmp
+
+# Eclipse / ADT
+.metadata/
+.recommenders/
+*.launch
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.idea/
+.vscode/
+*.iml
