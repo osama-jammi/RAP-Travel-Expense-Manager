@@ -1,0 +1,9 @@
+CLASS zbp_zi_expensereport DEFINITION
+  PUBLIC
+  ABSTRACT
+  FINAL
+  FOR BEHAVIOR OF ZI_ExpenseReport.
+ENDCLASS.
+
+CLASS zbp_zi_expensereport IMPLEMENTATION.
+ENDCLASS.
