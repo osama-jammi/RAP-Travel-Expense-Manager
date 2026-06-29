@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Service Binding ZUI_TEM_REPORT_04 - OData V4 UI -->
+<!-- Type de liaison : OData V4 - UI (Fiori Elements) -->
+<!-- Service Definition liee : ZUI_TEM_REPORT -->
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_SRVB" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <SRVB>
+    <HEADER>
+     <SRVB_NAME>ZUI_TEM_REPORT_04</SRVB_NAME>
+     <BINDING_TYPE>ODATA</BINDING_TYPE>
+     <BINDING_VERSION>V4</BINDING_VERSION>
+     <BINDING_CATEGORY>UI</BINDING_CATEGORY>
+     <RELEASE_STATE>published</RELEASE_STATE>
+    </HEADER>
+    <SERVICES>
+     <SERVICE>
+      <SERVICE_DEFINITION>ZUI_TEM_REPORT</SERVICE_DEFINITION>
+      <SERVICE_VERSION>0001</SERVICE_VERSION>
+     </SERVICE>
+    </SERVICES>
+   </SRVB>
+  </asx:values>
+ </asx:abap>
+</abapGit>

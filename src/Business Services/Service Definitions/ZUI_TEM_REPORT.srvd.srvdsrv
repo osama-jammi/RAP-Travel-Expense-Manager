@@ -1,0 +1,5 @@
+@EndUserText.label: 'Service - Note de frais (Expense Report)'
+define service ZUI_TEM_REPORT {
+  expose ZC_TemReport as ExpenseReport;
+  expose ZC_TemItem   as ExpenseItem;
+}
