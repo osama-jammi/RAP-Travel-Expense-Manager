@@ -1,0 +1,94 @@
+managed implementation in class zbp_i_temreport unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZI_TemReport alias ExpenseReport
+persistent table ztem_raport
+draft table ztem_raport_d
+lock master total etag ChangedAt
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  create;
+  update;
+  delete;
+
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare;
+
+  action ( features : instance ) submit  result [1] $self;
+  action ( features : instance ) approve result [1] $self;
+  action ( features : instance ) reject  parameter ztem_reject_param result [1] $self;
+
+  determination setInitialStatus on modify { create; }
+
+  validation validateStatus   on save { field Status; }
+  validation validateEmployee on save { field EmployeeID; }
+
+  association _Items { create; with draft; }
+
+  field ( numbering : managed, readonly ) ReportUUID;
+  field ( readonly ) CreatedBy, CreatedAt,
+                     ChangedBy, ChangedAt,
+                     LocalLastChangedAt, TotalAmount;
+  field ( mandatory ) ReportTitle, EmployeeID, Currency;
+
+  mapping for ztem_raport corresponding
+  {
+    ReportUUID         = report_uuid;
+    ReportTitle        = report_title;
+    EmployeeID         = employee_id;
+    Status             = status;
+    TotalAmount        = total_amount;
+    Currency           = currency;
+    SubmittedAt        = submitted_at;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    ChangedBy          = changed_by;
+    ChangedAt          = changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for ZI_TemItem alias ExpenseItem
+persistent table ztem_item
+draft table ztem_item_d
+lock dependent by _Report
+authorization dependent by _Report
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+
+  determination calcTotalAmount on modify { field Amount; }
+
+  validation validateAmount on save { field Amount; }
+  validation validateDate   on save { field ExpenseDate; }
+
+  association _Report { with draft; }
+
+  field ( numbering : managed, readonly ) ItemUUID;
+  field ( readonly ) ReportUUID, CreatedBy, CreatedAt,
+                     ChangedBy, ChangedAt, LocalLastChangedAt;
+  field ( mandatory ) ExpenseType, Amount, Currency, ExpenseDate;
+
+  mapping for ztem_item corresponding
+  {
+    ItemUUID           = item_uuid;
+    ReportUUID         = report_uuid;
+    ItemPos            = item_pos;
+    ExpenseType        = expense_type;
+    Description        = description;
+    Amount             = amount;
+    Currency           = currency;
+    ExpenseDate        = expense_date;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    ChangedBy          = changed_by;
+    ChangedAt          = changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

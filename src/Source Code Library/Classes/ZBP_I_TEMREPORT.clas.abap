@@ -1,0 +1,9 @@
+CLASS zbp_i_temreport DEFINITION
+  PUBLIC
+  ABSTRACT
+  FINAL
+  FOR BEHAVIOR OF zi_temreport.
+ENDCLASS.
+
+CLASS zbp_i_temreport IMPLEMENTATION.
+ENDCLASS.
