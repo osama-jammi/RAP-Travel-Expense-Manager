@@ -1,6 +1,0 @@
-@EndUserText.label: 'Service Definition - Expense Report (OData V4, UI)'
-define service ZUI_ExpenseReport_O4
-{
-  expose ZC_ExpenseReport as ExpenseReport;
-  expose ZC_ExpenseItem   as ExpenseItem;
-}
