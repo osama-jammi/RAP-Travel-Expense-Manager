@@ -1,0 +1,25 @@
+projection;
+strict ( 2 );
+use draft;
+
+define behavior for ZC_TemReport alias ExpenseReport
+{
+  use create;
+  use update;
+  use delete;
+
+  // actions metier exposees a l'UI
+  use action submit;
+  use action approve;
+  use action reject;
+
+  use association _Items { create; with draft; }
+}
+
+define behavior for ZC_TemItem alias ExpenseItem
+{
+  use update;
+  use delete;
+
+  use association _Report;
+}
