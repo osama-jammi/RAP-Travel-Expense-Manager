@@ -64,6 +64,23 @@ CLASS lhc_ExpenseReport IMPLEMENTATION.
   ENDMETHOD.
 
 
+" --- dans la PRIVATE SECTION de lhc_ExpenseReport ---
+METHODS get_global_authorizations FOR GLOBAL AUTHORIZATION
+  IMPORTING REQUEST requested_authorizations FOR ExpenseReport
+  RESULT result.
+
+" --- dans la IMPLEMENTATION ---
+METHOD get_global_authorizations.
+  " Demo : on autorise tout
+  result-%create         = if_abap_behv=>auth-allowed.
+  result-%update         = if_abap_behv=>auth-allowed.
+  result-%delete         = if_abap_behv=>auth-allowed.
+  result-%action-submit  = if_abap_behv=>auth-allowed.
+  result-%action-approve = if_abap_behv=>auth-allowed.
+  result-%action-reject  = if_abap_behv=>auth-allowed.
+ENDMETHOD.
+
+
   " ---- Validation : statut autorise --------------------------------
   METHOD validateStatus.
     READ ENTITIES OF zi_temreport IN LOCAL MODE
