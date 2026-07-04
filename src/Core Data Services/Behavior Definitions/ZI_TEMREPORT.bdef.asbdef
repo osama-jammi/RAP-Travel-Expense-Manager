@@ -17,7 +17,13 @@ etag master LocalLastChangedAt
   draft action Activate optimized;
   draft action Discard;
   draft action Resume;
-  draft determine action Prepare;
+  draft determine action Prepare
+  {
+    validation validateStatus;
+    validation validateEmployee;
+    validation ExpenseItem~validateAmount;
+    validation ExpenseItem~validateDate;
+  }
 
   action ( features : instance ) submit  result [1] $self;
   action ( features : instance ) approve result [1] $self;
@@ -25,8 +31,8 @@ etag master LocalLastChangedAt
 
   determination setInitialStatus on modify { create; }
 
-  validation validateStatus   on save { field Status; }
-  validation validateEmployee on save { field EmployeeID; }
+  validation validateStatus   on save { create; field Status; }
+  validation validateEmployee on save { create; field EmployeeID; }
 
   association _Items { create; with draft; }
 
@@ -63,10 +69,10 @@ etag master LocalLastChangedAt
   update;
   delete;
 
-  determination calcTotalAmount on modify { field Amount; }
+  determination calcTotalAmount on modify { create; field Amount; }
 
-  validation validateAmount on save { field Amount; }
-  validation validateDate   on save { field ExpenseDate; }
+  validation validateAmount on save { create; field Amount; }
+  validation validateDate   on save { create; field ExpenseDate; }
 
   association _Report { with draft; }
 
