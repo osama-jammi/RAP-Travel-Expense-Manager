@@ -1,4 +1,4 @@
-<h1 align="center">✈️ RAP Travel &amp; Expense Manager</h1>
+# RAP Travel & Expense Manager
 
 <p align="center">
   <i>Gestion des notes de frais de bout en bout, construite avec le ABAP RESTful Application Programming Model (RAP).</i>
@@ -17,7 +17,7 @@
 
 ---
 
-## 🎯 Problème résolu
+## Problème résolu
 
 Beaucoup d'entreprises gèrent encore les **notes de frais** manuellement (Excel, mails) ou avec des outils déconnectés de SAP. Ce projet propose une application **RAP managed (avec draft)** native S/4HANA / BTP qui couvre tout le cycle :
 
@@ -25,25 +25,25 @@ Beaucoup d'entreprises gèrent encore les **notes de frais** manuellement (Excel
 
 avec une UI **Fiori Elements** générée par annotations et une API **OData V4**.
 
-## 🔄 Cycle de vie du statut
+## Cycle de vie du statut
 
-| Code | Statut | Transition |
-|------|--------|------------|
-| `D` | Brouillon (Draft) | créé automatiquement → action **Submit** |
-| `S` | Soumis (Submitted) | → action **Approve** ou **Reject** |
-| `A` | Approuvé (Approved) | état final |
-| `R` | Rejeté (Rejected) | état final (avec motif) |
+| Code | Statut              | Transition                               |
+| ---- | ------------------- | ---------------------------------------- |
+| `D`  | Brouillon (Draft)   | créé automatiquement → action **Submit** |
+| `S`  | Soumis (Submitted)  | → action **Approve** ou **Reject**       |
+| `A`  | Approuvé (Approved) | état final                               |
+| `R`  | Rejeté (Rejected)   | état final (avec motif)                  |
 
 Les actions sont **activées/désactivées dynamiquement** selon le statut (*instance feature control*).
 
-## 🏗️ Architecture
+## Architecture
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │                     SAP Fiori Elements (UI)                    │
 │              List Report  +  Object Page (auto)                │
 └───────────────────────────────┬──────────────────────────────┘
-                                 │ OData V4
+                                │ OData V4
 ┌───────────────────────────────┴──────────────────────────────┐
 │  Service Binding  ZUI_TEM_REPORT_04  (OData V4 · UI)          │
 │        ◄────────  Service Definition  ZUI_TEM_REPORT          │
@@ -65,46 +65,47 @@ Les actions sont **activées/désactivées dynamiquement** selon le statut (*ins
 
 Voir [`docs/architecture.md`](docs/architecture.md) pour le détail.
 
-## 🧩 Modèle métier
+## Modèle métier
 
-| Objet | Rôle | Champs clés |
-|-------|------|-------------|
-| **ZI_TemReport** *(root)* | En-tête de la note de frais | titre, employé, statut, montant total, devise, date de soumission |
-| **ZI_TemItem** *(child)* | Lignes de dépense — en **composition** du header | position, type, description, montant, devise, date |
-| **ztem_reject_param** | Entité abstraite : paramètre de l'action **Reject** | motif du rejet |
+| Objet                     | Rôle                                                | Champs clés                                                       |
+| ------------------------- | --------------------------------------------------- | ----------------------------------------------------------------- |
+| **ZI_TemReport** *(root)* | En-tête de la note de frais                         | titre, employé, statut, montant total, devise, date de soumission |
+| **ZI_TemItem** *(child)*  | Lignes de dépense — en **composition** du header    | position, type, description, montant, devise, date                |
+| **ztem_reject_param**     | Entité abstraite : paramètre de l'action **Reject** | motif du rejet                                                    |
 
-## ⚙️ Fonctionnalités RAP
+## Fonctionnalités RAP
 
-- **Managed + Draft** : sauvegarde intermédiaire (brouillon) via tables draft `_D`.
-- **Numérotation managed** : clés `ReportUUID` / `ItemUUID` générées automatiquement (UUID).
-- **Déterminations**
-  - `setInitialStatus` → statut `D` à la création.
-  - `calcTotalAmount` → recalcul du **montant total** de l'en-tête = somme des lignes.
-- **Validations** (`on save`) : `validateStatus`, `validateEmployee`, `validateAmount` (> 0), `validateDate` (non vide / non future).
-- **Actions métier** : `submit`, `approve`, `reject` *(avec motif)* — résultat `$self`.
-- **Feature control d'instance** : `get_instance_features` active/désactive Submit/Approve/Reject selon le statut.
-- **Contrôle d'autorisation global** : `get_global_authorizations`.
-- **Champs** : `readonly` (zones techniques + total), `mandatory` (titre, employé, devise…), **ETag / lock master** pour la concurrence.
+* **Managed + Draft** : sauvegarde intermédiaire (brouillon) via tables draft `_D`.
+* **Numérotation managed** : clés `ReportUUID` / `ItemUUID` générées automatiquement (UUID).
+* **Déterminations**
 
-## ⚒️ Stack technique
+  * `setInitialStatus` → statut `D` à la création.
+  * `calcTotalAmount` → recalcul du **montant total** de l'en-tête = somme des lignes.
+* **Validations** (`on save`) : `validateStatus`, `validateEmployee`, `validateAmount` (> 0), `validateDate` (non vide / non future).
+* **Actions métier** : `submit`, `approve`, `reject` *(avec motif)* — résultat `$self`.
+* **Feature control d'instance** : `get_instance_features` active/désactive Submit/Approve/Reject selon le statut.
+* **Contrôle d'autorisation global** : `get_global_authorizations`.
+* **Champs** : `readonly` (zones techniques + total), `mandatory` (titre, employé, devise…), **ETag / lock master** pour la concurrence.
 
-- **CDS** : interface views + projection views + association / composition
-- **Behavior Definition & Implementation** : RAP *managed* avec *draft*
-- **OData V4** via *Service Definition* + *Service Binding* (catégorie UI)
-- **SAP Fiori Elements** (List Report Object Page) — annotations `@UI` inline
-- **ABAP Cloud** / **BTP ABAP Environment** (ABAP for Cloud Development)
+## Stack technique
 
-## 🗺️ Roadmap
+* **CDS** : interface views + projection views + association / composition
+* **Behavior Definition & Implementation** : RAP *managed* avec *draft*
+* **OData V4** via *Service Definition* + *Service Binding* (catégorie UI)
+* **SAP Fiori Elements** (List Report Object Page) — annotations `@UI` inline
+* **ABAP Cloud** / **BTP ABAP Environment** (ABAP for Cloud Development)
 
-| Phase | Contenu | Branche |
-|-------|---------|---------|
-| **1** | Modèle de données : tables DDIC (+ draft), interface views, composition | `feature/01-data-model-cds` |
+## Roadmap
+
+| Phase | Contenu                                                                                                                | Branche                       |
+| ----- | ---------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| **1** | Modèle de données : tables DDIC (+ draft), interface views, composition                                                | `feature/01-data-model-cds`   |
 | **2** | Behavior managed + draft : actions, validations, déterminations, feature/auth control, classe de génération de données | `feature/02-behavior-actions` |
-| **3** | Projection views + `@UI`, service definition, service binding OData V4, app Fiori | `feature/03-service-fiori` |
+| **3** | Projection views + `@UI`, service definition, service binding OData V4, app Fiori                                      | `feature/03-service-fiori`    |
 
 Détail des tâches dans les [**Issues**](../../issues) et la [**Roadmap**](docs/roadmap.md).
 
-## 🚀 Démarrage
+## Démarrage
 
 > Prérequis : un système **SAP BTP ABAP Environment** (ou S/4HANA 2022+) + **ABAP Development Tools (ADT)** dans Eclipse, et **abapGit**.
 
@@ -120,11 +121,11 @@ Détail des tâches dans les [**Issues**](../../issues) et la [**Roadmap**](docs
    pour ouvrir l'app Fiori Elements
 ```
 
-## 📂 Structure du dépôt
+## Structure du dépôt
 
 L'arborescence reproduit l'organisation du **projet ADT** (catégories Eclipse) :
 
-```
+```text
 src/
 ├─ Business Services/
 │  ├─ Service Bindings/      ZUI_TEM_REPORT_04.srvb.xml        (OData V4 · UI)
@@ -145,11 +146,11 @@ docs/                        Architecture & roadmap
 .github/                     Templates issues / PR
 ```
 
-## 🤝 Contribution
+## Contribution
 
 Voir [`CONTRIBUTING.md`](CONTRIBUTING.md) — conventions de commit (Conventional Commits), branches et PR.
 
-## 📜 Licence
+## Licence
 
 Distribué sous licence **MIT** — voir [`LICENSE`](LICENSE).
 
